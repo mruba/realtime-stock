@@ -25,6 +25,8 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 
 ## Build & development
 
+First we need to install and run ElasticSearch Engine `./elasticsearch`
+
 Run `grunt build` for building and `grunt serve` for preview.
 
 ## Testing

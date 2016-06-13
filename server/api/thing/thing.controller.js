@@ -66,6 +66,36 @@ export function index(req, res) {
     .catch(handleError(res));
 }
 
+// Middleware Test
+export function middleware(req, res, next){
+  console.log('here is the middleware working');
+  next();
+}
+
+// Search with elastich Search
+export function search(req, res){
+  //return res.send(req.query);
+  // return Thing.search({query_string: {query: req.query}}, {hydrate: false}, function(err, results) {
+  //   return res.send(results.hits);
+  // });
+
+
+  return Thing.search({ match_all: {}},
+    {
+          suggest: {
+            thingsuggest: {
+              text: req.query.q,
+              completion: {
+                field: 'name'
+              }
+            }
+          }
+        }, function(err, response) {
+          console.log(response.suggest)
+          return res.send(response.suggest)
+        });
+}
+
 // Gets a single Thing from the DB
 export function show(req, res) {
   return Thing.findById(req.params.id).exec()

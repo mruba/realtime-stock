@@ -5,6 +5,8 @@ var controller = require('./thing.controller');
 
 var router = express.Router();
 
+router.get('/search', controller.middleware, controller.search);
+
 router.get('/', controller.index);
 router.get('/:id', controller.show);
 router.post('/', controller.create);
