@@ -38,8 +38,22 @@ var UserSchema = new Schema({
   salt: String,
   facebook: {},
   twitter: {},
-  github: {}
-});
+  github: {},
+  //proyect fileds requirements
+  active: { type: Boolean, default: true },
+  phone: String,
+  mobile_phone: String,
+  street_name: String,
+  street_number: String,
+  colony: String,
+  state: String,
+  city: String,
+  delegation: String,
+  zip_code: String,
+  orders: [{type: Schema.Types.ObjectId, ref: 'Order'}]
+  },
+  { timestamps: { createdAt: 'created_at' } }
+);
 
 /**
  * Virtuals
