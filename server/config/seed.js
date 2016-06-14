@@ -7,6 +7,7 @@
 import Thing from '../api/thing/thing.model';
 import User from '../api/user/user.model';
 import Product from '../api/product/product.model';
+import Order from '../api/order/order.model';
 
 
 
@@ -69,6 +70,37 @@ User.find({}).remove()
     })
     .then(() => {
       console.log('finished populating users');
+      //Lets seed some orders
+      //this needs to be executed after seeding the user
+      var createOrder = (user, i) => {
+        Product.random(function(errs, product) {
+          var order = new Order({
+            pharmacy: "0003"+i,
+            payment: 'debit',
+            comment: 'hello world',
+            _user: user._id
+          })
+
+          var newProduct = new Product({_id: product._id, name: 'product.name', item: 'product.item'});
+          console.log(newProduct);
+          order.products.push({name: 'product.name', item: 'product.item'});
+
+          order.save(function (err) {
+            if (err) return console.log(err);
+            console.log('Success!');
+          });
+
+        });
+      };
+
+      Order.find({}).remove()
+        .then(() => {
+          User.findOne({name: 'Test User'}).exec(function(err, user){
+            for (let i of Array(10).keys()) {
+              createOrder(user, i);
+            }
+          });
+        });
     });
   });
 
@@ -116,10 +148,10 @@ Product.find({}).remove()
         "provider": "Vichy ",
         "url": "http://farmaciasanpablo.com.mx/api/products/568d324869702d3e92c90a00",
         "images": {
-          "thumb": null,
-          "medium": null,
-          "large": null,
-          "original": null
+          "thumb": '',
+          "medium": '',
+          "large": '',
+          "original": ''
         }
       },
       {
@@ -146,10 +178,10 @@ Product.find({}).remove()
         "description": "Vichy   -  Dermocosméticos",
         "provider": "Vichy ",
         "images": {
-          "thumb": null,
-          "medium": null,
-          "large": null,
-          "original": null
+          "thumb": '',
+          "medium": '',
+          "large": '',
+          "original": ''
         }
       },
       {
@@ -161,10 +193,10 @@ Product.find({}).remove()
         "description": "Imipramina  -  25mg",
         "provider": "Tofranil ",
         "images": {
-          "thumb": null,
-          "medium": null,
-          "large": null,
-          "original": null
+          "thumb": '',
+          "medium": '',
+          "large": '',
+          "original": ''
         }
       },
       {

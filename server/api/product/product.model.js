@@ -27,9 +27,19 @@ var ProductSchema = new mongoose.Schema({
   active: {type: Boolean, default: true}
 });
 
-
-
 ProductSchema.plugin(mongoosastic);
+
+ProductSchema.statics.random = function(callback) {
+  this.count(function(err, count) {
+    if (err) {
+      return callback(err);
+    }
+    var rand = Math.floor(Math.random() * count);
+    this.findOne().skip(rand).exec(callback);
+  }.bind(this));
+};
+
+
 
 ProductSchema = mongoose.model('Product', ProductSchema);
 
@@ -42,6 +52,7 @@ ProductSchema.createMapping(function(err, mapping){
     console.log(mapping);
   }
 });
+
 
 
 
