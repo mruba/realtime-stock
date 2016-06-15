@@ -8,11 +8,7 @@ var ProductSchema = new mongoose.Schema({
   upc: String,
   name: {
     type: String,
-    es_type: 'completion',
-    es_analyzer: 'simple',
-    es_indexed: true,
-    es_search_analyzer : 'simple',
-    es_payloads : true
+    es_indexed:true
   },
   description: String,
   provider: String,
@@ -27,7 +23,7 @@ var ProductSchema = new mongoose.Schema({
   active: {type: Boolean, default: true}
 });
 
-ProductSchema.plugin(mongoosastic);
+
 
 ProductSchema.statics.random = function(callback) {
   this.count(function(err, count) {
@@ -39,21 +35,23 @@ ProductSchema.statics.random = function(callback) {
   }.bind(this));
 };
 
+ProductSchema.plugin(mongoosastic);
+
+var MongooseSearch = mongoose.model('Product', ProductSchema);
+
+export {MongooseSearch};
+
+// ProductSchema.createMapping(function(err, mapping){
+//   if(err){
+//     console.log('error creating mapping (you can safely ignore this)');
+//     console.log(err);
+//   }else{
+//     console.log('mapping created!');
+//     console.log(mapping);
+//   }
+// });
 
 
-ProductSchema = mongoose.model('Product', ProductSchema);
 
-ProductSchema.createMapping(function(err, mapping){
-  if(err){
-    console.log('error creating mapping (you can safely ignore this)');
-    console.log(err);
-  }else{
-    console.log('mapping created!');
-    console.log(mapping);
-  }
-});
-
-
-
-
-export default  ProductSchema;
+//
+// export default  ProductSchema;
