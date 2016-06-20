@@ -8,7 +8,8 @@ var userCtrlStub = {
   me: 'userCtrl.me',
   changePassword: 'userCtrl.changePassword',
   show: 'userCtrl.show',
-  create: 'userCtrl.create'
+  create: 'userCtrl.create',
+  search: 'userCtrl.search'
 };
 
 var authServiceStub = {
@@ -99,6 +100,16 @@ describe('User API Router:', function() {
     it('should route to user.controller.create', function() {
       expect(routerStub.post
         .withArgs('/', 'userCtrl.create')
+        ).to.have.been.calledOnce;
+    });
+
+  });
+
+  describe('GET /api/users/search', function() {
+
+    it('should route to user.controller.search', function() {
+      expect(routerStub.get
+        .withArgs('/search', 'authService.hasRole.salesman', 'userCtrl.search')
         ).to.have.been.calledOnce;
     });
 

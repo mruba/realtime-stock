@@ -18,6 +18,16 @@ import jwt from 'jsonwebtoken';
 /**
  * handleError and validate Errors
  */
+function handleEntityNotFound(res) {
+ return function(entity) {
+   if (!entity) {
+     res.status(404).end();
+     return null;
+   }
+   return entity;
+ };
+}
+
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
   return function(err) {
@@ -29,6 +39,15 @@ function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
     res.status(statusCode).send(err);
+  };
+}
+
+function respondWithResult(res, statusCode) {
+  statusCode = statusCode || 200;
+  return function(entity) {
+    if (entity) {
+      res.status(statusCode).json(entity);
+    }
   };
 }
 
@@ -137,20 +156,23 @@ export function authCallback(req, res, next) {
 //     .catch(handleError(res));
 // }
 //
-// // Gets a single Product from the DB
-// export function show(req, res) {
-//   return Product.findById(req.params.id).exec()
-//     .then(handleEntityNotFound(res))
-//     .then(respondWithResult(res))
-//     .catch(handleError(res));
-// }
+// Gets a single Product from the DB
+export function show(req, res) {
+  return Product.findById(req.params.id).exec()
+    .then(handleEntityNotFound(res))
+    .then(validationError(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
 //
-// // Creates a new Product in the DB
-// export function create(req, res) {
-//   return Product.create(req.body)
-//     .then(respondWithResult(res, 201))
-//     .catch(handleError(res));
-// }
+// Creates a new Product in the DB
+export function create(req, res) {
+  return Product.create(req.body)
+    .then(handleEntityNotFound(res))
+    .then(validationError(res))
+    .then(respondWithResult(res, 201))
+    .catch(handleError(res));
+}
 //
 // // Updates an existing Product in the DB
 // export function update(req, res) {

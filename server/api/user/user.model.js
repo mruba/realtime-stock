@@ -4,13 +4,19 @@ import crypto from 'crypto';
 import mongoose from 'mongoose';
 mongoose.Promise = require('bluebird');
 import {Schema} from 'mongoose';
+import mongoosastic from 'mongoosastic';
+
 
 const authTypes = ['github', 'twitter', 'facebook', 'google'];
 
 var UserSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    es_indexed: true
+  },
   email: {
     type: String,
+    es_indexed: true,
     lowercase: true,
     required: function() {
       if (authTypes.indexOf(this.provider) === -1) {
@@ -41,15 +47,16 @@ var UserSchema = new Schema({
   github: {},
   //proyect fileds requirements
   active: { type: Boolean, default: true },
-  phone: String,
-  mobile_phone: String,
-  street_name: String,
-  street_number: String,
-  colony: String,
-  state: String,
-  city: String,
-  delegation: String,
-  zip_code: String,
+  // phone: String,
+  // mobile_phone: String,
+  // street_name: String,
+  // street_number: String,
+  // colony: String,
+  // state: String,
+  // city: String,
+  // delegation: String,
+  // zip_code: String,
+  addresses: [{type: Schema.Types.ObjectId, ref: 'Address'}],
   orders: [{type: Schema.Types.ObjectId, ref: 'Order'}]
   },
   { timestamps: { createdAt: 'created_at' } }
@@ -264,5 +271,7 @@ UserSchema.methods = {
     });
   }
 };
+
+UserSchema.plugin(mongoosastic);
 
 export default mongoose.model('User', UserSchema);

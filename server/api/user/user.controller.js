@@ -5,6 +5,26 @@ import passport from 'passport';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
 
+function respondWithResult(res, statusCode) {
+  statusCode = statusCode || 200;
+  return function(entity) {
+    if (entity) {
+      res.status(statusCode).json(entity);
+    }
+  };
+}
+
+function handleEntityNotFound(res) {
+  return function(entity) {
+    if (!entity) {
+      res.status(404).end();
+      return null;
+    }
+    return entity;
+  };
+}
+
+
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
   return function(err) {
@@ -18,6 +38,26 @@ function handleError(res, statusCode) {
     res.status(statusCode).send(err);
   };
 }
+
+
+/**
+ * Search a list of users
+ * restriction: 'admin'
+ */
+ export function search(req, res) {
+   User.search({
+     query_string: {
+       query: req.query.q
+     }
+   }, (err, results) => {
+     // results here
+     if(err) handleError(err);
+     else{
+       return res.status(200).json(results.hits);
+     }
+   });
+ }
+
 
 /**
  * Get list of users
@@ -43,7 +83,7 @@ export function create(req, res, next) {
       var token = jwt.sign({ _id: user._id }, config.secrets.session, {
         expiresIn: 60 * 60 * 5
       });
-      res.json({ token });
+      res.status(201).json({ token });
     })
     .catch(validationError(res));
 }

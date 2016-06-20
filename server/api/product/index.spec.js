@@ -54,44 +54,44 @@ describe('Product API Router:', function() {
 
   });
 
-  describe('POST /api/products', function() {
+  // describe('POST /api/products', function() {
+  //
+  //   it('should route to product.controller.create', function() {
+  //     expect(routerStub.post
+  //       .withArgs('/', 'productCtrl.create')
+  //       ).to.have.been.calledOnce;
+  //   });
+  //
+  // });
 
-    it('should route to product.controller.create', function() {
-      expect(routerStub.post
-        .withArgs('/', 'productCtrl.create')
-        ).to.have.been.calledOnce;
-    });
+  // describe('PUT /api/products/:id', function() {
+  //
+  //   it('should route to product.controller.update', function() {
+  //     expect(routerStub.put
+  //       .withArgs('/:id', 'productCtrl.update')
+  //       ).to.have.been.calledOnce;
+  //   });
+  //
+  // });
 
-  });
+  // describe('PATCH /api/products/:id', function() {
+  //
+  //   it('should route to product.controller.update', function() {
+  //     expect(routerStub.patch
+  //       .withArgs('/:id', 'productCtrl.update')
+  //       ).to.have.been.calledOnce;
+  //   });
+  //
+  // });
 
-  describe('PUT /api/products/:id', function() {
-
-    it('should route to product.controller.update', function() {
-      expect(routerStub.put
-        .withArgs('/:id', 'productCtrl.update')
-        ).to.have.been.calledOnce;
-    });
-
-  });
-
-  describe('PATCH /api/products/:id', function() {
-
-    it('should route to product.controller.update', function() {
-      expect(routerStub.patch
-        .withArgs('/:id', 'productCtrl.update')
-        ).to.have.been.calledOnce;
-    });
-
-  });
-
-  describe('DELETE /api/products/:id', function() {
-
-    it('should route to product.controller.destroy', function() {
-      expect(routerStub.delete
-        .withArgs('/:id', 'productCtrl.destroy')
-        ).to.have.been.calledOnce;
-    });
-
-  });
+  // describe('DELETE /api/products/:id', function() {
+  //
+  //   it('should route to product.controller.destroy', function() {
+  //     expect(routerStub.delete
+  //       .withArgs('/:id', 'productCtrl.destroy')
+  //       ).to.have.been.calledOnce;
+  //   });
+  //
+  // });
 
 });

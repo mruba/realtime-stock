@@ -3,11 +3,10 @@
 
 .constant("appConfig", {
 	"userRoles": [
-		"guest",
 		"user",
-		"admin",
 		"salesman",
-		"delivery"
+		"delivery",
+		"admin"
 	]
 })
 
