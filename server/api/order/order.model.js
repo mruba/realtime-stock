@@ -14,9 +14,14 @@ var OrderSchema = new Schema({
   comment: String,
   info: String,
   active: Boolean,
-  //products: [ProductSchema],
-  _agent: {type: Schema.Types.ObjectId, ref: 'User'},
-  _user: {type: Schema.Types.ObjectId, ref: 'User'}
+  products: [
+    {
+      id: {type: Schema.Types.ObjectId,  ref: 'Product'},
+      amount:   { type: Number, require: true }
+    },
+  ],
+  _agent: {type: Schema.Types.ObjectId, ref: 'User', require:true},
+  _user: {type: Schema.Types.ObjectId, ref: 'User', require:true}
   },
   { timestamps: { createdAt: 'created_at' } }
 );

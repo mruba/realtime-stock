@@ -9,6 +9,7 @@ var router = new Router();
 //this will be needed in the future
 //auth.hasRole('admin')
 
+router.get('/suggest', controller.suggest);
 router.get('/search',  controller.search);
 
 router.get('/',  controller.index);

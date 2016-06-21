@@ -14,6 +14,10 @@ import Product from './product.model';
 import passport from 'passport';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
+import redis from 'redis';
+
+//var client = redis.createClient();
+
 
 /**
  * handleError and validate Errors
@@ -63,10 +67,8 @@ export function index(req, res) {
     .catch(handleError(res));
 }
 
-
-
 // Search with elastich Search
-export function search(req, res){
+export function suggest(req, res){
   return Product.search({ match_all: {}},
     {
           suggest: {
@@ -81,6 +83,23 @@ export function search(req, res){
           console.log(response.suggest)
           return res.send(response.suggest)
         });
+}
+
+
+// Search with elastich Search
+export function search(req, res){
+  Product.search({
+    query_string: {
+      query: req.query.q
+    }
+  }, function(err, results) {
+    // results here
+    if(err) res.send(err);
+    else{
+      return res.send(results.hits);
+      //respondWithResult(results);
+    }
+  });
 }
 
 
