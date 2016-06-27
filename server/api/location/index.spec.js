@@ -7,7 +7,8 @@ var locationCtrlStub = {
   show: 'locationCtrl.show',
   create: 'locationCtrl.create',
   update: 'locationCtrl.update',
-  destroy: 'locationCtrl.destroy'
+  destroy: 'locationCtrl.destroy',
+  findbyzip: 'locationCtrl.findbyzip'
 };
 
 var routerStub = {
@@ -34,15 +35,15 @@ describe('Location API Router:', function() {
     expect(locationIndex).to.equal(routerStub);
   });
 
-  // describe('GET /y', function() {
-  //
-  //   it('should route to location.controller.index', function() {
-  //     expect(routerStub.get
-  //       .withArgs('/', 'locationCtrl.index')
-  //       ).to.have.been.calledOnce;
-  //   });
-  //
-  // });
+  describe('GET /api/locations/findbyzip/:id', function() {
+
+    it('should route to location.controller.findbyzip', function() {
+      expect(routerStub.get
+        .withArgs('/findbyzip/:id', 'locationCtrl.findbyzip')
+        ).to.have.been.calledOnce;
+    });
+
+  });
   //
   // describe('GET /y/:id', function() {
   //

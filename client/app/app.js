@@ -5,7 +5,7 @@ angular.module('bcpSpApp', ['bcpSpApp.auth', 'bcpSpApp.admin', 'bcpSpApp.constan
     'validation.match'
   ])
   .config(function($urlRouterProvider, $locationProvider) {
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/home');
 
     $locationProvider.html5Mode(true);
   });

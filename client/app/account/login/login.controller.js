@@ -8,6 +8,7 @@ class LoginController {
 
     this.Auth = Auth;
     this.$state = $state;
+    console.log($state);
   }
 
   login(form) {

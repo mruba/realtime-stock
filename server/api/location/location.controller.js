@@ -61,19 +61,34 @@ function handleError(res, statusCode) {
 
 // Search a list of posible matches
 export function search(req, res) {
-  Location.search({
-    query_string: {
-      query: req.query.q
-    }
-  }, function(err, results) {
-    // results hereç
+  // Location.search({
+  //   query_string: {
+  //     query: req.query.q
+  //   }
+  // }, function(err, results) {
+  //   // results hereç
+  //
+  //   if(err) console.log(err);
+  //   else{
+  //     return res.send(results);
+  //     //respondWithResult(results);
+  //   }
+  // });
+}
 
-    if(err) console.log(err);
-    else{
-      return res.send(results);
-      //respondWithResult(results);
-    }
-  });
+// Find a location by postalcode
+export function findbyzip(req, res){
+  console.log(typeof(req.params.id));
+  console.log('entro a la ruta');
+  return Location.find({ zip: req.params.id }).exec()
+    .then(handleEntityNotFound(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+
+  // return Location.find({ zip: req.params.id }).exec()
+  // .then((entity)=>{
+  //     res.json(entity);
+  // })
 }
 
 // Gets a list of Locations

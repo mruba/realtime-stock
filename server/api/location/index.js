@@ -5,7 +5,7 @@ var controller = require('./location.controller');
 
 var router = express.Router();
 
-router.get('/search',  controller.search);
+router.get('/findbyzip/:id',  controller.findbyzip);
 //router.get('/', controller.index);
 // router.get('/:id', controller.show);
 // router.post('/', controller.create);

@@ -33,6 +33,7 @@ angular.module('bcpSpApp')
       });
   })
   .run(function($rootScope) {
+    console.log('Testing what is runing on run function :sunny:');
     $rootScope.$on('$stateChangeStart', function(event, next, nextParams, current) {
       if (next.name === 'logout' && current && current.name && !current.authenticate) {
         next.referrer = current.name;

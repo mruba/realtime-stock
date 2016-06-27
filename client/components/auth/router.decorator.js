@@ -13,6 +13,7 @@
         if (typeof next.authenticate === 'string') {
           Auth.hasRole(next.authenticate, _.noop)
             .then(has => {
+              console.log(_.noop);
               if (has) {
                 return;
               }

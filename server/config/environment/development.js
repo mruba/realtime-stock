@@ -8,9 +8,7 @@ module.exports = {
   mongo: {
     uri: 'mongodb://localhost/bcpsp-dev'
   },
-
   // Seed database on startup
-  seedDB: true,
+  seedDB: false,
   bulkDB: false
-
 };

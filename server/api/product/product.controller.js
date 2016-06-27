@@ -15,9 +15,10 @@ import passport from 'passport';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
 import redis from 'redis';
+import redisConnection from 'redis-connection';
 
-//var client = redis.createClient();
-
+// var client = redis.createClient();
+// var redisClient = redisConnection();
 
 /**
  * handleError and validate Errors
@@ -72,7 +73,7 @@ export function suggest(req, res){
   return Product.search({ match_all: {}},
     {
           suggest: {
-            thingsuggest: {
+            productsuggest: {
               text: req.query.q,
               completion: {
                 field: 'name'
@@ -85,24 +86,49 @@ export function suggest(req, res){
         });
 }
 
+//this function will help us to merge the stock aviability
+// with the search method
+
+var stockProductMerge = (products, location = '03800') => {
+
+  _.each(products, (product)=>{
+      console.log(product._id);
+  })
+  //redisClient.end();
+}
 
 // Search with elastich Search
 export function search(req, res){
   Product.search({
-    query_string: {
-      query: req.query.q
+    filtered: {
+      query:{
+        query_string: {
+          // Be aware that wildcard queries can use an
+          // enormous amount of memory and perform very badly
+          query: `${req.query.q}*`,
+          default_operator: 'OR'
+        }
+      },
+      filter:{
+        term:{
+          active: true
+        }
+      }
     }
   }, function(err, results) {
     // results here
     if(err) res.send(err);
     else{
-      return res.send(results.hits);
+
+      if(results.hits.total > 0){
+        stockProductMerge(results.hits.hits, req.query.location)
+      }
+
+      return res.send(results);
       //respondWithResult(results);
     }
   });
 }
-
-
 
 
 /**

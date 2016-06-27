@@ -76,6 +76,11 @@ export function show(req, res) {
 
 // Creates a new Order in the DB
 export function create(req, res) {
+  // we should recibe an array of [{id: productId, quantity: quantityProduct}...]
+  // first we should valide the products in the body content
+
+  // then we should
+
   return Order.create(req.body)
     .then(respondWithResult(res, 201))
     .catch(handleError(res));

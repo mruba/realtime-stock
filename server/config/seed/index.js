@@ -8,25 +8,25 @@ import Thing from '../../api/thing/thing.model';
 import User from '../../api/user/user.model';
 import Product from '../../api/product/product.model';
 import Order from '../../api/order/order.model';
-import redis from 'redis';
-
-var client = redis.createClient();
+// import redis from 'redis';
+//
+// var client = redis.createClient();
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-var redisIncrement = (products) => {
-  let location = getRandomInt(10, 80);
-  products.forEach((product)=>{
-    //redisIncrement(i+1, product.item);
-    let stock = getRandomInt(3, 100)
-    client.incrby(`0${location}:${product.item}`, stock, function(err, reply) {
-        //console.log(reply);
-    });
-  })
-
-}
+// var redisIncrement = (products) => {
+//   let location = getRandomInt(10, 80);
+//   products.forEach((product)=>{
+//     //redisIncrement(i+1, product.item);
+//     let stock = getRandomInt(3, 100)
+//     client.incrby(`0${location}:${product.item}`, stock, function(err, reply) {
+//         //console.log(reply);
+//     });
+//   })
+//
+// }
 
 
 Thing.find({}).remove()
@@ -258,17 +258,17 @@ Product.find({}).remove()
         }
     })
     .then(() => {
-      client.flushall();
-      Product.find().exec((err, products)=>{
-        if(products){
-          for (let i of Array(10).keys()) {
-            redisIncrement(products);
-          }
-        }
-      })
+      // client.flushall();
+      // Product.find().exec((err, products)=>{
+      //   if(products){
+      //     for (let i of Array(10).keys()) {
+      //       redisIncrement(products);
+      //     }
+      //   }
+      // })
     })
     .then(() => {
       console.log('finished populating produts');
-      client.close();
+      // client.close();
     })
   })
