@@ -118,9 +118,6 @@ export function search(req, res){
       }else{
         res.status(404).end();
       }
-
-
-      //respondWithResult(results);
     }
   });
 }
