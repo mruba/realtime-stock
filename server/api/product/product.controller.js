@@ -9,15 +9,15 @@
 
 'use strict';
 
-import _ from 'lodash';
 import Product from './product.model';
 import passport from 'passport';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
-import redis from 'redis';
-import redisConnection from 'redis-connection';
+import stockProductMerge from './stock.handler'
+//import redis from 'redis';
+//import redisConnection from 'redis-connection';
 
-// var client = redis.createClient();
+//var client = redis.createClient();
 // var redisClient = redisConnection();
 
 /**
@@ -72,30 +72,21 @@ export function index(req, res) {
 export function suggest(req, res){
   return Product.search({ match_all: {}},
     {
-          suggest: {
-            productsuggest: {
-              text: req.query.q,
-              completion: {
-                field: 'name'
-              }
-            }
+      suggest: {
+        productsuggest: {
+          text: req.query.q,
+          completion: {
+            field: 'name'
           }
-        }, function(err, response) {
-          console.log(response.suggest)
-          return res.send(response.suggest)
-        });
+        }
+      }
+    }, function(err, response) {
+      console.log(response.suggest)
+      return res.send(response.suggest)
+    });
 }
 
-//this function will help us to merge the stock aviability
-// with the search method
 
-var stockProductMerge = (products, location = '03800') => {
-
-  _.each(products, (product)=>{
-      console.log(product._id);
-  })
-  //redisClient.end();
-}
 
 // Search with elastich Search
 export function search(req, res){
@@ -119,12 +110,16 @@ export function search(req, res){
     // results here
     if(err) res.send(err);
     else{
-
       if(results.hits.total > 0){
-        stockProductMerge(results.hits.hits, req.query.location)
+        stockProductMerge(results.hits.hits, req.query.store)
+        .then((results)=>{
+          res.status(200).json(results);
+        })
+      }else{
+        res.status(404).end();
       }
 
-      return res.send(results);
+
       //respondWithResult(results);
     }
   });

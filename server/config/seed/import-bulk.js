@@ -84,8 +84,14 @@ fs.access(filePathNearLocations, fs.R_OK || fs.W_OK, (err) => {
 
     csv.fromStream(stream, { comment: null, headers: ['origin', 'location01', 'location02', 'location03', 'location04']})
     .on('data', (data)=>{
+      //we should push only the availabe values
+      let locationList = [data.location01, data.location02, data.location03, data.location04];
+      let key = `nearstores:${data.origin}`;
+      locationList.forEach((location)=>{
+        if (location) client.rpush(key, location)
+      });
 
-      client.rpush(data.origin, data.location01, data.location02, data.location03, data.location04);
+
 
     }).on('end', ()=>{
       console.log('the bulk is done!');

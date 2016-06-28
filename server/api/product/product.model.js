@@ -4,7 +4,10 @@ import mongoose from 'mongoose';
 import mongoosastic from 'mongoosastic';
 
 var ProductSchema = new mongoose.Schema({
-  item: String,
+  item: {
+    type: String,
+    es_indexed: true
+  },
   upc: String,
   name: {
     type: String,
