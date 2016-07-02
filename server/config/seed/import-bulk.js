@@ -1,4 +1,5 @@
 import locationSchema from '../../api/location/location.model';
+import productSchema from '../../api/product/product.model';
 import csv from 'fast-csv';
 import fs from 'fs';
 import path from 'path';
@@ -8,6 +9,7 @@ import redis from 'redis';
 //files are put into upload folder.
 var filePathLocations = path.join(__dirname, 'upload/locations_region.csv')
 var filePathNearLocations = path.join(__dirname, 'upload/locations_relations.csv')
+var filePathProducts = path.join(__dirname, 'upload/product_catalog.csv')
 
 //var path = "./upload/locations_region.csv";
 
@@ -87,6 +89,7 @@ fs.access(filePathNearLocations, fs.R_OK || fs.W_OK, (err) => {
       //we should push only the availabe values
       let locationList = [data.location01, data.location02, data.location03, data.location04];
       let key = `nearstores:${data.origin}`;
+      client.del(key);
       locationList.forEach((location)=>{
         if (location) client.rpush(key, location)
       });
@@ -101,3 +104,66 @@ fs.access(filePathNearLocations, fs.R_OK || fs.W_OK, (err) => {
     client.quit();
   }
 });
+
+
+
+productSchema.find({}).remove()
+  .then(()=>{
+    fs.access(filePathProducts, fs.R_OK || fs.W_OK, (err) => {
+      if(!err){
+        //lets populate the db with this bitch
+        console.log('the bulk products has started');
+        var stream = fs.createReadStream(filePathProducts);
+        //Descripción de Colonia,Zona de Reparto,Codigo Postal,Farmacia,Descripción Farmacia,Desc. Delegación,Descripción Estado
+
+        csv.fromStream(stream, { comment: null, headers: ['item', 'upc', 'name', 'content', 'group', 'type', 'activeSustance', 'antibiotic', 'highSpeciality', 'status', 'category', 'brand', 'provider']})
+        .on('data', (data)=>{
+          console.log(data.name);
+
+          let antibiotic = (data.antibiotic) ? true : false;
+          let highSpeciality = (data.highSpeciality) ? true : false;
+
+          let productObject = {
+            item: data.item,
+            upc: data.upc,
+            name: data.name,
+            content: data.content,
+            group: data.group,
+            type: data.type,
+            activeSustance: data.activeSustance,
+            antibiotic: antibiotic,
+            highSpeciality: highSpeciality,
+            status: data.status,
+            category: data.category,
+            brand: data.brand,
+            provider: data.provider
+          };
+
+          productSchema.collection.insert(productObject, (err, docs) => {
+            if(err) console.log('there was an error dude');
+          });
+
+        }).on('end', ()=>{
+          console.log('the bulk products is done!');
+            //now its time to sync all this with the elastisearch
+            var stream = productSchema.synchronize()
+            var count = 0;
+            stream.on('data', function(err, doc){
+              count++;
+            });
+
+            stream.on('close', function(){
+              console.log('indexed ' + count + ' documents!');
+            });
+
+            stream.on('error', function(err){
+              console.log(err);
+            });
+
+        })
+
+      }else{
+        console.log('no access!');
+      }
+    });
+  })

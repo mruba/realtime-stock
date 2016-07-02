@@ -12,3 +12,4 @@ coverage
 dump.rdb
 Vagrantfile
 .vagrant/
+server/config/seed/upload

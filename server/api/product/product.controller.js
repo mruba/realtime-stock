@@ -90,13 +90,15 @@ export function suggest(req, res){
 
 // Search with elastich Search
 export function search(req, res){
+  let pageNum = req.query.pageNum || 1;
+  let perPage = req.query.perPage || 10;
   Product.search({
     filtered: {
       query:{
         query_string: {
           // Be aware that wildcard queries can use an
           // enormous amount of memory and perform very badly
-          query: `${req.query.q}*`,
+          query: `${req.query.q}`,
           default_operator: 'OR'
         }
       },
@@ -106,15 +108,21 @@ export function search(req, res){
         }
       }
     }
+  },
+  {
+    from: (pageNum - 1) * perPage,
+    size: perPage,
+    hydrate: true
   }, function(err, results) {
     // results here
     if(err) res.send(err);
     else{
       if(results.hits.total > 0){
         stockProductMerge(results.hits.hits, req.query.store)
-        .then((results)=>{
-          res.status(200).json(results);
+        .then((products)=>{
+          res.status(200).json({hits: results.hits.total, products: products});
         })
+        // res.json(results)
       }else{
         res.status(404).end();
       }

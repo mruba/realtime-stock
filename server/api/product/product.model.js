@@ -3,6 +3,9 @@
 import mongoose from 'mongoose';
 import mongoosastic from 'mongoosastic';
 
+//'item', 'upc', 'name', 'content', 'group', 'type', 'activeSustance', 'antibiotic', 'highSpeciality',
+//'status', 'category', 'brand', 'provider'
+
 var ProductSchema = new mongoose.Schema({
   item: {
     type: String,
@@ -17,8 +20,22 @@ var ProductSchema = new mongoose.Schema({
     // es_search_analyzer : 'simple',
     // es_payloads : true
   },
-  description: {
-    type:String,
+  content: String,
+  group: String,
+  type: String,
+  activeSustance: String,
+  antibiotic:{
+    type: Boolean,
+    default: false
+  },
+  highSpeciality:{
+    type: Boolean,
+    default: false
+  },
+  status: String,
+  category: String,
+  brand:{
+    type: String,
     es_indexed: true
   },
   provider: {
@@ -26,8 +43,6 @@ var ProductSchema = new mongoose.Schema({
     es_indexed: true
   },
   price: Number,
-  status: String,
-  family: String,
   images:   {
     thumb: String,
     medium: String,
@@ -46,7 +61,11 @@ ProductSchema.statics.random = function(callback) {
   }.bind(this));
 };
 
-ProductSchema.plugin(mongoosastic);
+ProductSchema.plugin(mongoosastic, {bulk: {
+    size: 1000, // preferred number of docs to bulk index
+    delay: 100 //milliseconds to wait for enough docs to meet size constraint
+  }
+});
 
 ProductSchema = mongoose.model('Product', ProductSchema);
 

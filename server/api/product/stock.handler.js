@@ -15,25 +15,32 @@ var stockProductMerge = (products, store = '2') => {
     let productStockList = [];
 
     function buildObject(objProduct, objStock){
-      let product = Object.assign({}, objProduct, objStock);
+      let filterProduct = _.pick(objProduct, ['item', 'images', 'upc', 'name', 'price', 'family', 'description', 'provider']);
+      let product = Object.assign({}, filterProduct, objStock);
+      console.log(typeof objProduct === 'object');
+      console.log(typeof objStock === 'object');
       productStockList.push(product);
     }
 
     // if(err) throw.exception
     //nearStores.unshift(store);
     let allProducts = products.map((productItem)=>{
+
       return new Promise((cb)=>{
-        let key = `stock:${productItem._source.item}`;
+        let key = `stock:${productItem.item}`;
         client.hget(key, store, (err, qty)=>{
           if(qty > 0){
             buildObject(productItem, {stock: [{store: store, qty: qty}] });
+            cb()
+          }else if ( qty === null) {
+            buildObject(productItem, {stock: null });
             cb()
           }else{
             let key = `nearstores:${store}`;
             client.lrange(key, 0, -1, (err, nearStores)=>{
               let allStock = nearStores.map((store)=>{
                 return new Promise((resolve)=>{
-                  let key = `stock:${productItem._source.item}`;
+                  let key = `stock:${productItem.item}`;
                   client.hget(key, store, (err, qty)=>{
                     console.log({store: store, qty: qty});
                     resolve({store: store, qty: qty});
