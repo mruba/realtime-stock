@@ -36,3 +36,39 @@ Running `npm test` will run the unit tests with karma.
 ## Deploying
 
 Run `gulp serve:dist`
+
+
+
+## Gulp tasks
+
+`gulp env:all | env:test | env:prod`
+`gulp inject`
+`gulp styles`
+`gulp transpile:client`
+`gulp transpile:server`
+`gulp lint:scripts`
+`gulp jscs`
+`gulp clean:tmp`
+`gulp start:client`
+`gulp start:server`
+`gulp start:server:prod`
+`gulp start:inspector`
+`gulp start:server:debug`
+`gulp watch`
+`gulp serve`
+`gulp serve:dist`
+`gulp serve:debug`
+`gulp test`
+`gulp test:server`
+`gulp wiredep:client`
+`gulp build`
+`gulp clean:dist`
+`gulp build:client`
+`gulp html`
+`gulp constant`
+`gulp build:images`
+`gulp copy:extras`
+`gulp copy:fonts`
+`gulp copy:assets`
+`gulp copy:server`
+`gulp coverage:pre`
